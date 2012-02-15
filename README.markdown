@@ -38,9 +38,7 @@ Easy to use UIView subclass to quickly add a cool animated carrusel of pictures 
 ...
 ```
 
-#Attributions:
-
-CC Images by:
-- http://www.flickr.com/photos/blmiers2/
-- http://www.flickr.com/photos/niamor/
-- http://www.flickr.com/photos/macieklew/
+#Attributions (Creative Commons Images)
++ http://www.flickr.com/photos/blmiers2/
++ http://www.flickr.com/photos/niamor/
++ http://www.flickr.com/photos/macieklew/
