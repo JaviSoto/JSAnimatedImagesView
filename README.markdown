@@ -1,5 +1,12 @@
 #Description:
 Easy to use UIView subclass to quickly add a cool animated carrusel of pictures to your app.
+
+#Sample:
+
+![Video](http://cl.ly/1x0P2o2I053L1W2B2h3J/Screen%20Shot%202012-02-15%20at%202.33.09%20PM.png)
+
+http://jsoto.es/xmKcLb
+
 #Usage:
 (refer to the sample project)
 
