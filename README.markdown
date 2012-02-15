@@ -49,7 +49,6 @@ http://jsoto.es/xmKcLb
 + http://www.flickr.com/photos/blmiers2/
 + http://www.flickr.com/photos/niamor/
 + http://www.flickr.com/photos/macieklew/
-+ 
 
 #License
 Copyright 2012 Javier Soto (ios@javisoto.es)
