@@ -43,7 +43,7 @@
 }
 
 @property (nonatomic, strong) NSArray *imageViews;
-@property (unsafe_unretained, nonatomic, readonly) NSTimer *imageSwappingTimer;
+@property (nonatomic, unsafe_unretained, readonly) NSTimer *imageSwappingTimer;
 
 - (void)_init;
 
@@ -242,12 +242,11 @@
 
 - (void)dealloc
 {
-    #if !_JSARCEnabled
-    [_imageViews release];
-    #endif
     [_imageSwappingTimer invalidate];
     
     #if !_JSARCEnabled
+    [_imageViews release];
+    
     [super dealloc];
     #endif
 }
