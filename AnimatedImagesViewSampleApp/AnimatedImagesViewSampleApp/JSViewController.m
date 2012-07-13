@@ -11,8 +11,8 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface JSViewController()
-@property (retain, nonatomic) IBOutlet JSAnimatedImagesView *animatedImagesView;
-@property (retain, nonatomic) IBOutlet UIView *infoBox;
+@property (strong, nonatomic) IBOutlet JSAnimatedImagesView *animatedImagesView;
+@property (strong, nonatomic) IBOutlet UIView *infoBox;
 @end
 
 @implementation JSViewController
@@ -67,7 +67,9 @@
 #pragma mark - Memory Management
 
 - (void)viewDidUnload
-{    
+{
+    [self.animatedImagesView stopAnimating];
+    
     [self setAnimatedImagesView:nil];    
     [self setInfoBox:nil];
     
@@ -75,11 +77,15 @@
 }
 
 - (void)dealloc
-{    
-    [_animatedImagesView release];    
+{
+    [self.animatedImagesView stopAnimating];
+    
+    #if !_JSARCEnabled
+    [_animatedImagesView release];
     [_infoBox release];
     
     [super dealloc];
+    #endif
 }
 
 @end

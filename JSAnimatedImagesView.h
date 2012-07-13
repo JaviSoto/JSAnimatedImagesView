@@ -23,19 +23,33 @@
 
 @interface JSAnimatedImagesView : UIView
 
-@property (nonatomic, assign) id<JSAnimatedImagesViewDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id<JSAnimatedImagesViewDelegate> delegate;
 
-/* Default if not set is kJSAnimatedImagesViewDefaultTimePerImage */
-@property (nonatomic, assign) NSTimeInterval timePerImage;
+/**
+ * @default kJSAnimatedImagesViewDefaultTimePerImage
+ */
+@property (nonatomic, unsafe_unretained) NSTimeInterval timePerImage;
 
+/**
+ * @discussion call this before the user can see the `JSAnimatedImagesView` (e.g. -viewWillAppear:) so that it's already animating when it starts being visible.
+ */
 - (void)startAnimating;
+
+/**
+ * @discussion You should call stopAnimating at least when the controller that creates the `JSAnimatedImagesView` ceases to exist to prevent it to animate forever.
+ */
 - (void)stopAnimating;
 
+/**
+ * @discussion forces `JSAnimatedImagesView` to call the delegate methods again.
+ */
 - (void)reloadData;
 
 @end
 
 @protocol JSAnimatedImagesViewDelegate
+
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView;
 - (UIImage *)animatedImagesView:(JSAnimatedImagesView *)animatedImagesView imageAtIndex:(NSUInteger)index;
+
 @end

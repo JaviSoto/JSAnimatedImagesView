@@ -22,6 +22,18 @@
 
 #define kJSAnimatedImagesViewImageViewsBorderOffset 10
 
+#ifndef _JSARCEnabled
+
+#define _JSARCEnabled __has_feature(objc_arc)
+
+#if _JSARCEnabled
+    #define _JSARCSafeRelease(object)
+#else
+    #define _JSARCSafeRelease(object) [object release]
+#endif
+
+#endif
+
 @interface JSAnimatedImagesView()
 {
     BOOL animating;
@@ -30,8 +42,8 @@
     NSInteger currentlyDisplayingImageIndex;
 }
 
-@property (nonatomic, retain) NSArray *imageViews;
-@property (nonatomic, retain) NSTimer *imageSwappingTimer;
+@property (nonatomic, strong) NSArray *imageViews;
+@property (unsafe_unretained, nonatomic, readonly) NSTimer *imageSwappingTimer;
 
 - (void)_init;
 
@@ -70,7 +82,9 @@
 {
     NSMutableArray *imageViews = [NSMutableArray array];
     
-    for (int i = 0; i < 2; i++)
+    const int numberOfImageViews = 2;
+    
+    for (int i = 0; i < numberOfImageViews; i++)
     {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(-kJSAnimatedImagesViewImageViewsBorderOffset, -kJSAnimatedImagesViewImageViewsBorderOffset, self.bounds.size.width + (kJSAnimatedImagesViewImageViewsBorderOffset * 2), self.bounds.size.height + (kJSAnimatedImagesViewImageViewsBorderOffset * 2))];
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -79,10 +93,10 @@
         [self addSubview:imageView];
 
         [imageViews addObject:imageView];
-        [imageView release];
+        _JSARCSafeRelease(imageView);
     }
          
-    self.imageViews = [[imageViews copy] autorelease];
+    self.imageViews = imageViews;
     
     currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
 }
@@ -114,7 +128,7 @@
     
     do
     {
-        nextImageToShowIndex = [[self class] randomIntBetweenNumber:0 andNumber:totalImages-1];
+        nextImageToShowIndex = [[self class] randomIntBetweenNumber:0 andNumber:totalImages - 1];
     }
     while (nextImageToShowIndex == currentlyDisplayingImageIndex);
     
@@ -228,11 +242,14 @@
 
 - (void)dealloc
 {
+    #if !_JSARCEnabled
     [_imageViews release];
+    #endif
     [_imageSwappingTimer invalidate];
-    [_imageSwappingTimer release];
     
+    #if !_JSARCEnabled
     [super dealloc];
+    #endif
 }
 
 @end
