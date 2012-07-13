@@ -28,7 +28,7 @@
 /**
  * @default kJSAnimatedImagesViewDefaultTimePerImage
  */
-@property (nonatomic, unsafe_unretained) NSTimeInterval timePerImage;
+@property (nonatomic, assign) NSTimeInterval timePerImage;
 
 /**
  * @discussion call this before the user can see the `JSAnimatedImagesView` (e.g. -viewWillAppear:) so that it's already animating when it starts being visible.
