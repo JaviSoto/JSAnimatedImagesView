@@ -20,11 +20,11 @@
 #define kJSAnimatedImagesViewDefaultTimePerImage 5.0f
 #define kJSAnimatedImagesViewDefaultImageSwappingAnimationDuration 1.0f
 
-@protocol JSAnimatedImagesViewDelegate;
+@protocol JSAnimatedImagesViewDataSource;
 
 @interface JSAnimatedImagesView : UIView
 
-@property (nonatomic, unsafe_unretained) id<JSAnimatedImagesViewDelegate> delegate;
+@property (nonatomic, weak) id<JSAnimatedImagesViewDataSource> dataSource;
 
 /**
  * @default kJSAnimatedImagesViewDefaultTimePerImage
@@ -47,13 +47,13 @@
 - (void)stopAnimating;
 
 /**
- * @discussion forces `JSAnimatedImagesView` to call the delegate methods again.
+ * @discussion forces `JSAnimatedImagesView` to call the data source methods again.
  */
 - (void)reloadData;
 
 @end
 
-@protocol JSAnimatedImagesViewDelegate
+@protocol JSAnimatedImagesViewDataSource
 
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView;
 - (UIImage *)animatedImagesView:(JSAnimatedImagesView *)animatedImagesView imageAtIndex:(NSUInteger)index;

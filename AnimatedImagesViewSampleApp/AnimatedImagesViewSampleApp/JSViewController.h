@@ -10,6 +10,6 @@
 
 #import "JSAnimatedImagesView.h"
 
-@interface JSViewController : UIViewController <JSAnimatedImagesViewDelegate>
+@interface JSViewController : UIViewController <JSAnimatedImagesViewDataSource>
 
 @end

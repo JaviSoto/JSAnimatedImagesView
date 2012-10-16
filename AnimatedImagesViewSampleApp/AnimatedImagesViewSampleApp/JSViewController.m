@@ -25,7 +25,7 @@
 {
     [super viewDidLoad];
     
-    self.animatedImagesView.delegate = self;
+    self.animatedImagesView.dataSource = self;
     
     self.infoBox.layer.cornerRadius = 6;
 }
@@ -44,7 +44,7 @@
     [self.animatedImagesView stopAnimating];
 }
 
-#pragma mark - JSAnimatedImagesViewDelegate Methods
+#pragma mark - JSAnimatedImagesViewDataSource Methods
 
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView
 {

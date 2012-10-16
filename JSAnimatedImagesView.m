@@ -99,7 +99,7 @@
 
 - (void)startAnimating
 {
-    NSAssert(self.delegate != nil, @"You need to set the delegate property");
+    NSAssert(self.dataSource != nil, @"You need to set the data source property");
     
     if (!_animating)
     {
@@ -128,7 +128,7 @@
     
     _currentlyDisplayingImageIndex = nextImageToShowIndex;
 
-    imageViewToShow.image = [self.delegate animatedImagesView:self imageAtIndex:nextImageToShowIndex];
+    imageViewToShow.image = [self.dataSource animatedImagesView:self imageAtIndex:nextImageToShowIndex];
     
     static const CGFloat kMovementAndTransitionTimeOffset = 0.1;
     
@@ -172,7 +172,7 @@
 
 - (void)reloadData
 {
-    _totalImages = [self.delegate animatedImagesNumberOfImages:self];
+    _totalImages = [self.dataSource animatedImagesNumberOfImages:self];
     
     [self.imageSwappingTimer fire];
 }
@@ -205,12 +205,12 @@
 
 #pragma mark - Parameters
 
-- (void)setDelegate:(id<JSAnimatedImagesViewDelegate>)delegate
+- (void)setDataSource:(id<JSAnimatedImagesViewDataSource>)dataSource
 {
-    if (delegate != _delegate)
+    if (dataSource != _dataSource)
     {
-        _delegate = delegate;
-        _totalImages = [_delegate animatedImagesNumberOfImages:self];
+        _dataSource = dataSource;
+        _totalImages = [_dataSource animatedImagesNumberOfImages:self];
     }
 }
 
