@@ -11,14 +11,13 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface JSViewController()
+
 @property (strong, nonatomic) IBOutlet JSAnimatedImagesView *animatedImagesView;
 @property (strong, nonatomic) IBOutlet UIView *infoBox;
+
 @end
 
 @implementation JSViewController
-
-@synthesize infoBox = _infoBox;
-@synthesize animatedImagesView = _animatedImagesView;
 
 #pragma mark - View Life Cycle
 
@@ -64,28 +63,11 @@
     return (toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-#pragma mark - Memory Management
-
-- (void)viewDidUnload
+#ifdef __IPHONE_6_0
+- (NSUInteger)supportedInterfaceOrientations
 {
-    [self.animatedImagesView stopAnimating];
-    
-    [self setAnimatedImagesView:nil];    
-    [self setInfoBox:nil];
-    
-    [super viewDidUnload];    
+    return UIInterfaceOrientationMaskAllButUpsideDown;
 }
-
-- (void)dealloc
-{
-    [self.animatedImagesView stopAnimating];
-    
-    #if !_JSARCEnabled
-    [_animatedImagesView release];
-    [_infoBox release];
-    
-    [super dealloc];
-    #endif
-}
+#endif
 
 @end

@@ -4,22 +4,11 @@
 
 #import <Availability.h>
 
-#ifndef __IPHONE_4_0
+#ifndef __IPHONE_5_0
 #warning "This project uses features only available in iOS SDK 4.0 and later."
 #endif
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-
-    #define _JSARCEnabled __has_feature(objc_arc)
-
-    #if _JSARCEnabled
-        #define _JSARCSafeRelease(object)
-        #define _JSARCSafeAutorelease(object) (object)
-    #else
-        #define _JSARCSafeRelease(object) [object release]
-        #define _JSARCSafeAutorelease(object) [object autorelease]
-    #endif
-
 #endif

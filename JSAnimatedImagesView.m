@@ -17,45 +17,34 @@
 
 #import "JSAnimatedImagesView.h"
 
+#if !__has_feature(objc_arc)
+    #error JSAnimatedImagesView requires ARC enabled. Mark the .m file with the `objc_arc` linker flag.
+#endif
+
 #define kJSAnimatedImagesViewNoImageDisplayingIndex -1
 
 #define kJSAnimatedImagesViewImageViewsBorderOffset 10
 
-#ifndef _JSARCEnabled
-
-#define _JSARCEnabled __has_feature(objc_arc)
-
-#if _JSARCEnabled
-    #define _JSARCSafeRelease(object)
-#else
-    #define _JSARCSafeRelease(object) [object release]
-#endif
-
-#endif
-
 @interface JSAnimatedImagesView()
 {
-    BOOL animating;
-    NSUInteger totalImages;
-    NSUInteger currentlyDisplayingImageViewIndex;
-    NSInteger currentlyDisplayingImageIndex;
+    BOOL _animating;
+    NSUInteger _totalImages;
+    NSUInteger _currentlyDisplayingImageViewIndex;
+    NSInteger _currentlyDisplayingImageIndex;
 }
 
 @property (nonatomic, strong) NSArray *imageViews;
-@property (nonatomic, unsafe_unretained, readonly) NSTimer *imageSwappingTimer;
+@property (nonatomic, weak, readonly) NSTimer *imageSwappingTimer;
 
 - (void)_init;
 
 + (NSUInteger)randomIntBetweenNumber:(NSUInteger)minNumber andNumber:(NSUInteger)maxNumber;
+
 @end
 
 @implementation JSAnimatedImagesView
 
-@synthesize imageViews = _imageViews;
 @synthesize imageSwappingTimer = _imageSwappingTimer;
-
-@synthesize delegate = _delegate,
-            timePerImage = _timePerImage;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -81,7 +70,7 @@
 {
     NSMutableArray *imageViews = [NSMutableArray array];
     
-    const int numberOfImageViews = 2;
+    const NSUInteger numberOfImageViews = 2;
     
     for (int i = 0; i < numberOfImageViews; i++)
     {
@@ -97,7 +86,8 @@
          
     self.imageViews = imageViews;
     
-    currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
+    _currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
+    _timePerImage = kJSAnimatedImagesViewDefaultTimePerImage;
     _transitionDuration = kJSAnimatedImagesViewDefaultImageSwappingAnimationDuration;
 }
 
@@ -107,109 +97,116 @@
 {
     NSAssert(self.delegate != nil, @"You need to set the delegate property");
     
-    if (!animating)
+    if (!_animating)
     {
-        animating = YES;
+        _animating = YES;
         [self.imageSwappingTimer fire];
     }
 }
 
 - (void)bringNextImage
 {
-    NSAssert(totalImages > 1, @"There should be more than 1 image to swap");
+    NSAssert(_totalImages > 1, @"There should be more than 1 image to swap");
     
-    UIImageView *imageViewToHide = [self.imageViews objectAtIndex:currentlyDisplayingImageViewIndex];
+    UIImageView *imageViewToHide = [self.imageViews objectAtIndex:_currentlyDisplayingImageViewIndex];
     
-    currentlyDisplayingImageViewIndex = currentlyDisplayingImageViewIndex == 0 ? 1 : 0;
+    _currentlyDisplayingImageViewIndex = _currentlyDisplayingImageViewIndex == 0 ? 1 : 0;
     
-    UIImageView *imageViewToShow = [self.imageViews objectAtIndex:currentlyDisplayingImageViewIndex];
+    UIImageView *imageViewToShow = [self.imageViews objectAtIndex:_currentlyDisplayingImageViewIndex];
 
-    NSUInteger nextImageToShowIndex = currentlyDisplayingImageIndex;
+    NSUInteger nextImageToShowIndex = _currentlyDisplayingImageIndex;
     
     do
     {
-        nextImageToShowIndex = [[self class] randomIntBetweenNumber:0 andNumber:totalImages - 1];
+        nextImageToShowIndex = [[self class] randomIntBetweenNumber:0 andNumber:_totalImages - 1];
     }
-    while (nextImageToShowIndex == currentlyDisplayingImageIndex);
+    while (nextImageToShowIndex == _currentlyDisplayingImageIndex);
     
-    currentlyDisplayingImageIndex = nextImageToShowIndex;
+    _currentlyDisplayingImageIndex = nextImageToShowIndex;
 
     imageViewToShow.image = [self.delegate animatedImagesView:self imageAtIndex:nextImageToShowIndex];
     
     static const CGFloat kMovementAndTransitionTimeOffset = 0.1;
     
     /* Move image animation */
-    [UIView animateWithDuration:self.timePerImage + kJSAnimatedImagesViewImageSwappingAnimationDuration + kMovementAndTransitionTimeOffset delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn animations:^{
-        NSInteger randomTranslationValueX = [[self class] randomIntBetweenNumber:0 andNumber:kJSAnimatedImagesViewImageViewsBorderOffset] - kJSAnimatedImagesViewImageViewsBorderOffset;
-        NSInteger randomTranslationValueY = [[self class] randomIntBetweenNumber:0 andNumber:kJSAnimatedImagesViewImageViewsBorderOffset] - kJSAnimatedImagesViewImageViewsBorderOffset;
-        
-        CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(randomTranslationValueX, randomTranslationValueY);
-        
-        CGFloat randomScaleTransformValue = [[self class] randomIntBetweenNumber:115 andNumber:120]/100;
-        
-        CGAffineTransform scaleTransform = CGAffineTransformMakeScale(randomScaleTransformValue, randomScaleTransformValue);
-
-        imageViewToShow.transform = CGAffineTransformConcat(scaleTransform, translationTransform);
-    } completion:NULL];
+    [UIView animateWithDuration:self.timePerImage + self.transitionDuration + kMovementAndTransitionTimeOffset
+                          delay:0.0
+                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn
+                     animations:^
+     {
+         NSInteger randomTranslationValueX = [[self class] randomIntBetweenNumber:0 andNumber:kJSAnimatedImagesViewImageViewsBorderOffset] - kJSAnimatedImagesViewImageViewsBorderOffset;
+         NSInteger randomTranslationValueY = [[self class] randomIntBetweenNumber:0 andNumber:kJSAnimatedImagesViewImageViewsBorderOffset] - kJSAnimatedImagesViewImageViewsBorderOffset;
+         
+         CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(randomTranslationValueX, randomTranslationValueY);
+         
+         CGFloat randomScaleTransformValue = [[self class] randomIntBetweenNumber:115 andNumber:120]/100;
+         
+         CGAffineTransform scaleTransform = CGAffineTransformMakeScale(randomScaleTransformValue, randomScaleTransformValue);
+         
+         imageViewToShow.transform = CGAffineTransformConcat(scaleTransform, translationTransform);
+     }
+                     completion:NULL];
     
     /* Fade animation */
-    [UIView animateWithDuration:kJSAnimatedImagesViewImageSwappingAnimationDuration delay:kMovementAndTransitionTimeOffset options:UIViewAnimationOptionBeginFromCurrentState 
-     | UIViewAnimationCurveEaseIn animations:^{
-        imageViewToShow.alpha = 1.0;        
-        imageViewToHide.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        if (finished)
-        {
-            imageViewToHide.transform = CGAffineTransformIdentity;
-        }
-    }];
+    [UIView animateWithDuration:self.transitionDuration
+                          delay:kMovementAndTransitionTimeOffset
+                        options:UIViewAnimationOptionBeginFromCurrentState
+     | UIViewAnimationCurveEaseIn
+                     animations:^
+     {
+         imageViewToShow.alpha = 1.0;
+         imageViewToHide.alpha = 0.0;
+     }
+                     completion:^(BOOL finished)
+     {
+         if (finished)
+         {
+             imageViewToHide.transform = CGAffineTransformIdentity;
+         }
+     }];
 }
 
 - (void)reloadData
 {
-    totalImages = [self.delegate animatedImagesNumberOfImages:self];
+    _totalImages = [self.delegate animatedImagesNumberOfImages:self];
     
     [self.imageSwappingTimer fire];
 }
 
 - (void)stopAnimating
 {
-    if (animating)
+    if (_animating)
     {       
         [_imageSwappingTimer invalidate];
         _imageSwappingTimer = nil;
         
         // Fade all image views out
-        [UIView animateWithDuration:kJSAnimatedImagesViewImageSwappingAnimationDuration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            for (UIImageView *imageView in self.imageViews)
-            {
-                imageView.alpha = 0.0;
-            }
-        } completion:^(BOOL finished) {
-            currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
-            animating = NO;
-        }];
+        [UIView animateWithDuration:self.transitionDuration
+                              delay:0.0
+                            options:UIViewAnimationOptionBeginFromCurrentState
+                         animations:^
+         {
+             for (UIImageView *imageView in self.imageViews)
+             {
+                 imageView.alpha = 0.0;
+             }
+         }
+                         completion:^(BOOL finished)
+         {
+             _currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
+             _animating = NO;
+         }];
     }
 }
 
 #pragma mark - Parameters
-
-- (NSTimeInterval)timePerImage
-{
-    if (_timePerImage == 0)
-    {
-        return kJSAnimatedImagesViewDefaultTimePerImage;
-    }
-    
-    return _timePerImage;
-}
 
 - (void)setDelegate:(id<JSAnimatedImagesViewDelegate>)delegate
 {
     if (delegate != _delegate)
     {
         _delegate = delegate;
-        totalImages = [_delegate animatedImagesNumberOfImages:self];
+        _totalImages = [_delegate animatedImagesNumberOfImages:self];
     }
 }
 
@@ -219,10 +216,24 @@
 {
     if (!_imageSwappingTimer)
     {
-        _imageSwappingTimer = [NSTimer scheduledTimerWithTimeInterval:self.timePerImage target:self selector:@selector(bringNextImage) userInfo:nil repeats:YES];
+        _imageSwappingTimer = [NSTimer scheduledTimerWithTimeInterval:self.timePerImage
+                                                               target:self
+                                                             selector:@selector(bringNextImage)
+                                                             userInfo:nil
+                                                              repeats:YES];
     }
     
     return _imageSwappingTimer;
+}
+
+- (void)setImageSwappingTimer:(NSTimer *)imageSwappingTimer
+{
+    if (imageSwappingTimer != _imageSwappingTimer)
+    {
+        [_imageSwappingTimer invalidate];
+
+        _imageSwappingTimer = imageSwappingTimer;
+    }
 }
 
 #pragma mark - Aux
@@ -236,19 +247,6 @@
     NSUInteger i = (arc4random() % (maxNumber - minNumber + 1)) + minNumber;
     
     return i;
-}
-
-#pragma mark - Memory Management
-
-- (void)dealloc
-{
-    [_imageSwappingTimer invalidate];
-    
-    #if !_JSARCEnabled
-    [_imageViews release];
-    
-    [super dealloc];
-    #endif
 }
 
 @end
