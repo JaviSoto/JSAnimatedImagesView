@@ -33,7 +33,7 @@ self.animatedImagesView.dataSource = self;
 
 @end
 
-@implementation MyViewController ()
+@implementation MyViewController
 
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView
 {
