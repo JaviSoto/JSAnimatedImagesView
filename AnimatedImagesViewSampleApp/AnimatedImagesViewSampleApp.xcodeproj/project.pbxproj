@@ -91,7 +91,7 @@
 				1D51248314EBC8DC00117DD2 /* JSViewController.h */,
 				1D51248414EBC8DC00117DD2 /* JSViewController.m */,
 				1D51248614EBC8DC00117DD2 /* JSViewController.xib */,
-				1D51248E14EBC8F200117DD2 /* Library */,
+				1D51248E14EBC8F200117DD2 /* JSAnimatedImagesView */,
 				1D51249814EBCCB000117DD2 /* Resources */,
 				1D51247814EBC8DC00117DD2 /* Supporting Files */,
 			);
@@ -109,13 +109,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1D51248E14EBC8F200117DD2 /* Library */ = {
+		1D51248E14EBC8F200117DD2 /* JSAnimatedImagesView */ = {
 			isa = PBXGroup;
 			children = (
 				1D51249014EBC8FA00117DD2 /* JSAnimatedImagesView.h */,
 				1D51248F14EBC8FA00117DD2 /* JSAnimatedImagesView.m */,
 			);
-			name = Library;
+			name = JSAnimatedImagesView;
 			sourceTree = "<group>";
 		};
 		1D51249814EBCCB000117DD2 /* Resources */ = {
