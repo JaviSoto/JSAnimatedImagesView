@@ -7,31 +7,33 @@ Easy to use UIView subclass to quickly add a cool animated carrusel of pictures 
 
 http://jsoto.es/xmKcLb
 
-## Usage:
-(refer to the sample project)
+## Usage
+
+- Clone the repository:
+
+```bash
+$ git clone git@github.com:JaviSoto/JSAnimatedImagesView.git
+```
+
+- Check out the sample project.
+- Drag the two files ```JSAnimatedImagesView.(h/m)``` onto your project.
+- Include the header file ````JSAnimatedImagesView.h``` into the controller where you want to use it.
+- Create a ```JSAnimatedImagesView``` instance either via code, or in interface builder (by creting a UIView and changing its class to ```JSAnimatedImagesView```).
+- Set the data source property on the view (probably on the ```viewDidLoad``` method):
+
+```objc
+self.animatedImagesView.dataSource = self;
+```
+
+- Implement the data source methods:
 
 ```objectivec
-/* .h file: */
-#import "JSAnimatedImagesView.h"
-@interface MyViewController <JSAnimatedImagesViewDelegate> // Conform to the protocol
-.....
 
-/* .m file: */
-...
+@interface MyViewController () <JSAnimatedImagesViewDataSource> // Conform to the protocol
 
-- (void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
+@end
 
-	[self.animatedImagesView startAnimating];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-
-	[self.animatedImagesView stopAnimating];
-}
+@implementation MyViewController ()
 
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView
 {
@@ -42,12 +44,31 @@ http://jsoto.es/xmKcLb
 {
 	return [UIImage imageNamed:[self.myImageNames objectAtIndex:index]];
 }
-...
+
+@end
+
 ```
 
+## Configuration
+
+- You can customize the following properties:
+
+```objc
+@property (nonatomic, assign) NSTimeInterval timePerImage;
+```
+
+Specifies the time each image is viewed until the next image is faded in.
+
+```objc
+@property (nonatomic, assign) NSTimeInterval transitionDuration;
+```
+
+Specifies the duration of the transition (fade-out/fade-in) animation.
+
+
 ## Compatibility
-- ```JSAnimatedImagesView``` is compatible with iOS4.0+
-- ```JSAnimatedImagesView``` supports ARC and non-ARC projects.
+- ```JSAnimatedImagesView``` is compatible with iOS5.0+
+- ```JSAnimatedImagesView``` requires ARC.
 
 ## Attributions (Creative Commons Images)
 + http://www.flickr.com/photos/blmiers2/

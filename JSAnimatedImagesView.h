@@ -37,17 +37,19 @@
 @property (nonatomic, assign) NSTimeInterval transitionDuration;
 
 /**
- * @discussion call this before the user can see the `JSAnimatedImagesView` (e.g. -viewWillAppear:) so that it's already animating when it starts being visible.
+ * @discussion the view starts animating automatically when it becomes visible, but you can use this method to start the animations again if you 
+ * stop them using the `-stopAnimating`.
  */
 - (void)startAnimating;
 
 /**
- * @discussion You should call stopAnimating at least when the controller that creates the `JSAnimatedImagesView` ceases to exist to prevent it to animate forever.
+ * @discussion the view automatically stops animating when it goes out of the screen, but you can choose to stop it manually using this method.
  */
 - (void)stopAnimating;
 
 /**
  * @discussion forces `JSAnimatedImagesView` to call the data source methods again.
+ * Use if you change the number of images.
  */
 - (void)reloadData;
 

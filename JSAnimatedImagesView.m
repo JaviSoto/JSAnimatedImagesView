@@ -180,8 +180,7 @@
 - (void)stopAnimating
 {
     if (_animating)
-    {       
-        [_imageSwappingTimer invalidate];
+    {
         _imageSwappingTimer = nil;
         
         // Fade all image views out
@@ -240,7 +239,25 @@
     }
 }
 
-#pragma mark - Aux
+#pragma mark - View Life Cycle
+
+- (void)didMoveToWindow
+{
+    const BOOL didAppear = (self.window != nil);
+
+    if (didAppear)
+    {
+        [self startAnimating];
+    }
+    else
+    {
+        [self stopAnimating];
+    }
+
+    NSLog(@"appeared %d", didAppear);
+}
+
+#pragma mark - Random Numbers
 
 + (NSUInteger)randomIntBetweenNumber:(NSUInteger)minNumber andNumber:(NSUInteger)maxNumber
 {

@@ -30,20 +30,6 @@
     self.infoBox.layer.cornerRadius = 6;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self.animatedImagesView startAnimating];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    
-    [self.animatedImagesView stopAnimating];
-}
-
 #pragma mark - JSAnimatedImagesViewDataSource Methods
 
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView
