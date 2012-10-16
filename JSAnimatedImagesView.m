@@ -74,14 +74,18 @@
     
     for (int i = 0; i < numberOfImageViews; i++)
     {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(-kJSAnimatedImagesViewImageViewsBorderOffset, -kJSAnimatedImagesViewImageViewsBorderOffset, self.bounds.size.width + (kJSAnimatedImagesViewImageViewsBorderOffset * 2), self.bounds.size.height + (kJSAnimatedImagesViewImageViewsBorderOffset * 2))];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(-kJSAnimatedImagesViewImageViewsBorderOffset,
+                                                                               -kJSAnimatedImagesViewImageViewsBorderOffset,
+                                                                               self.bounds.size.width + (kJSAnimatedImagesViewImageViewsBorderOffset * 2),
+                                                                               self.bounds.size.height + (kJSAnimatedImagesViewImageViewsBorderOffset * 2))];
+
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.clipsToBounds = YES;
+
         [self addSubview:imageView];
 
         [imageViews addObject:imageView];
-        _JSARCSafeRelease(imageView);
     }
          
     self.imageViews = imageViews;
