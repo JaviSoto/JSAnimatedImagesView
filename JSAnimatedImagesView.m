@@ -18,7 +18,6 @@
 #import "JSAnimatedImagesView.h"
 
 #define kJSAnimatedImagesViewNoImageDisplayingIndex -1
-#define kJSAnimatedImagesViewImageSwappingAnimationDuration 1.0f
 
 #define kJSAnimatedImagesViewImageViewsBorderOffset 10
 
@@ -99,6 +98,7 @@
     self.imageViews = imageViews;
     
     currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
+    _transitionDuration = kJSAnimatedImagesViewDefaultImageSwappingAnimationDuration;
 }
 
 #pragma mark - Animations
