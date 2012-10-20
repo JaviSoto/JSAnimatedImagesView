@@ -17,7 +17,7 @@ $ git clone git@github.com:JaviSoto/JSAnimatedImagesView.git
 
 - Check out the sample project.
 - Drag the two files ```JSAnimatedImagesView.(h/m)``` onto your project.
-- Include the header file ````JSAnimatedImagesView.h``` into the controller where you want to use it.
+- Include the header file ```JSAnimatedImagesView.h``` into the controller where you want to use it.
 - Create a ```JSAnimatedImagesView``` instance either via code, or in interface builder (by creating a UIView and changing its class to ```JSAnimatedImagesView```).
 - Set the data source property on the view (probably on the ```viewDidLoad``` method):
 
