@@ -253,8 +253,6 @@
     {
         [self stopAnimating];
     }
-
-    NSLog(@"appeared %d", didAppear);
 }
 
 #pragma mark - Random Numbers
