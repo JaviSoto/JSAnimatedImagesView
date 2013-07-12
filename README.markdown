@@ -9,14 +9,27 @@ http://jsoto.es/xmKcLb
 
 ## Usage
 
+- Using [CocoaPods](http://cocoapods.org/):
+- Add `pod 'JSAnimatedImagesView', '~> 1.0.'` to your `Podfile`.
+- You're done!
+
+-- or --
+
 - Clone the repository:
 
 ```bash
 $ git clone git@github.com:JaviSoto/JSAnimatedImagesView.git
 ```
 
+- Update the submodules:
+
+```bash
+$ git submodule update --init
+```
+
 - Check out the sample project.
 - Drag the two files ```JSAnimatedImagesView.(h/m)``` onto your project.
+- Drag `Dependencies/MSWeakTimer/MSWeakTimer.(h/m)` onto your project.
 - Include the header file ```JSAnimatedImagesView.h``` into the controller where you want to use it.
 - Create a ```JSAnimatedImagesView``` instance either via code, or in interface builder (by creating a UIView and changing its class to ```JSAnimatedImagesView```).
 - Set the data source property on the view (probably on the ```viewDidLoad``` method):
