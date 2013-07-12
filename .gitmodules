@@ -1,0 +1,3 @@
+[submodule "Dependencies/MSWeakTimer"]
+	path = Dependencies/MSWeakTimer
+	url = git@github.com:mindsnacks/MSWeakTimer.git

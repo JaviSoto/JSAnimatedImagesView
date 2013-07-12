@@ -19,6 +19,7 @@
 		1D51249C14EBCCBB00117DD2 /* image1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1D51249914EBCCBB00117DD2 /* image1.jpg */; };
 		1D51249D14EBCCBB00117DD2 /* image2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1D51249A14EBCCBB00117DD2 /* image2.jpg */; };
 		1D51249E14EBCCBB00117DD2 /* image3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1D51249B14EBCCBB00117DD2 /* image3.jpg */; };
+		D04F4701178F8E7E00C7B81D /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = D04F4700178F8E7E00C7B81D /* MSWeakTimer.m */; };
 		D05E21EF162D0EAC00E962ED /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D05E21EE162D0EAC00E962ED /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,8 @@
 		1D51249914EBCCBB00117DD2 /* image1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = image1.jpg; path = Resources/image1.jpg; sourceTree = "<group>"; };
 		1D51249A14EBCCBB00117DD2 /* image2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = image2.jpg; path = Resources/image2.jpg; sourceTree = "<group>"; };
 		1D51249B14EBCCBB00117DD2 /* image3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = image3.jpg; path = Resources/image3.jpg; sourceTree = "<group>"; };
+		D04F46FF178F8E7E00C7B81D /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSWeakTimer.h; path = ../../Dependencies/MSWeakTimer/MSWeakTimer.h; sourceTree = "<group>"; };
+		D04F4700178F8E7E00C7B81D /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MSWeakTimer.m; path = ../../Dependencies/MSWeakTimer/MSWeakTimer.m; sourceTree = "<group>"; };
 		D05E21EE162D0EAC00E962ED /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +97,7 @@
 				1D51248414EBC8DC00117DD2 /* JSViewController.m */,
 				1D51248614EBC8DC00117DD2 /* JSViewController.xib */,
 				1D51248E14EBC8F200117DD2 /* JSAnimatedImagesView */,
+				D04F46FE178F8E7500C7B81D /* MSWeakTimer */,
 				1D51249814EBCCB000117DD2 /* Resources */,
 				1D51247814EBC8DC00117DD2 /* Supporting Files */,
 			);
@@ -129,6 +133,15 @@
 				D05E21EE162D0EAC00E962ED /* Default-568h@2x.png */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		D04F46FE178F8E7500C7B81D /* MSWeakTimer */ = {
+			isa = PBXGroup;
+			children = (
+				D04F46FF178F8E7E00C7B81D /* MSWeakTimer.h */,
+				D04F4700178F8E7E00C7B81D /* MSWeakTimer.m */,
+			);
+			name = MSWeakTimer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +214,7 @@
 				1D51248214EBC8DC00117DD2 /* JSAppDelegate.m in Sources */,
 				1D51248514EBC8DC00117DD2 /* JSViewController.m in Sources */,
 				1D51249114EBC8FA00117DD2 /* JSAnimatedImagesView.m in Sources */,
+				D04F4701178F8E7E00C7B81D /* MSWeakTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

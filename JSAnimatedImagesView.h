@@ -32,29 +32,30 @@ static const CGFloat JSAnimatedImagesViewDefaultImageSwappingAnimationDuration =
 @property (nonatomic, weak) id<JSAnimatedImagesViewDataSource> dataSource;
 
 /**
- * @default kJSAnimatedImagesViewDefaultTimePerImage
+ Time between image transitions.
+ @note The default value is `JSAnimatedImagesViewDefaultTimePerImage`
  */
 @property (nonatomic, assign) NSTimeInterval timePerImage;
 
 /**
- * @default kJSAnimatedImagesViewDefaultImageSwappingAnimationDuration
+ The time it takes for images to fade out.
+ @note The default value is `JSAnimatedImagesViewDefaultImageSwappingAnimationDuration`
  */
 @property (nonatomic, assign) NSTimeInterval transitionDuration;
 
 /**
- * @discussion the view starts animating automatically when it becomes visible, but you can use this method to start the animations again if you 
- * stop them using the `-stopAnimating`.
+ The view starts animating automatically when it becomes visible, but you can use this method to start the animations again if you stop them using the `stopAnimating`.
  */
 - (void)startAnimating;
 
 /**
- * @discussion the view automatically stops animating when it goes out of the screen, but you can choose to stop it manually using this method.
+ The view automatically stops animating when it goes out of the screen, but you can choose to stop it manually using this method. You can re-start the animation using `startAnimating`.
  */
 - (void)stopAnimating;
 
 /**
- * @discussion forces `JSAnimatedImagesView` to call the data source methods again.
- * Use if you change the number of images.
+ Forces `JSAnimatedImagesView` to call the data source methods again.
+ You can use this method if the number of images has changed.
  */
 - (void)reloadData;
 
@@ -62,7 +63,17 @@ static const CGFloat JSAnimatedImagesViewDefaultImageSwappingAnimationDuration =
 
 @protocol JSAnimatedImagesViewDataSource
 
+/**
+ Implement this method to tell `JSAnimatedImagesView` how many images it has to display.
+ @param animatedImagesView The view that is requesting the number of images.
+ */
 - (NSUInteger)animatedImagesNumberOfImages:(JSAnimatedImagesView *)animatedImagesView;
+
+/**
+ Implement this method to provide an image for `JSAnimatedImagesView` to display inmediately after.
+ @param animatedImagesView The view that is requesting the image object.
+ @param index The index of the image to return. This is a value between `0` and `totalNumberOfImages - 1` (@see `animatedImagesNumberOfImages:`).
+ */
 - (UIImage *)animatedImagesView:(JSAnimatedImagesView *)animatedImagesView imageAtIndex:(NSUInteger)index;
 
 @end

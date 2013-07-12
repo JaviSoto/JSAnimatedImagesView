@@ -22,6 +22,8 @@
 
 #import "JSAnimatedImagesView.h"
 
+#import "MSWeakTimer.h"
+
 #if !__has_feature(objc_arc)
     #error JSAnimatedImagesView requires ARC enabled. Mark the .m file with the objc_arc linker flag.
 #endif
@@ -36,26 +38,21 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     NSUInteger _totalImages;
     NSUInteger _currentlyDisplayingImageViewIndex;
     NSInteger _currentlyDisplayingImageIndex;
+
+    NSArray *_imageViews;
 }
 
-@property (nonatomic, strong) NSArray *imageViews;
-@property (nonatomic, weak, readonly) NSTimer *imageSwappingTimer;
-
-- (void)_init;
-
-+ (NSUInteger)randomIntBetweenNumber:(NSUInteger)minNumber andNumber:(NSUInteger)maxNumber;
+@property (nonatomic, strong) MSWeakTimer *imageSwappingTimer;
 
 @end
 
 @implementation JSAnimatedImagesView
 
-@synthesize imageSwappingTimer = _imageSwappingTimer;
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     if ((self = [super initWithCoder:aDecoder]))
     {
-        [self _init];
+        [self commonInit];
     }
     
     return self;
@@ -65,13 +62,13 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
 {
     if ((self = [super initWithFrame:frame]))
     {
-        [self _init];
+        [self commonInit];
     }
     
     return self;
 }
 
-- (void)_init
+- (void)commonInit
 {
     NSMutableArray *imageViews = [NSMutableArray array];
     
@@ -79,7 +76,7 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     
     for (int i = 0; i < numberOfImageViews; i++)
     {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectInset(self.bounds, -kJSAnimatedImagesViewImageViewsBorderOffset, -kJSAnimatedImagesViewImageViewsBorderOffset)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectInset(self.bounds, -JSAnimatedImagesViewImageViewsBorderOffset, -JSAnimatedImagesViewImageViewsBorderOffset)];
 
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -90,11 +87,11 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
         [imageViews addObject:imageView];
     }
          
-    self.imageViews = imageViews;
-    
-    _currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
-    _timePerImage = kJSAnimatedImagesViewDefaultTimePerImage;
-    _transitionDuration = kJSAnimatedImagesViewDefaultImageSwappingAnimationDuration;
+    _imageViews = imageViews;
+
+    _currentlyDisplayingImageIndex = JSAnimatedImagesViewNoImageDisplayingIndex;
+    _timePerImage = JSAnimatedImagesViewDefaultTimePerImage;
+    _transitionDuration = JSAnimatedImagesViewDefaultImageSwappingAnimationDuration;
 }
 
 #pragma mark - Animations
@@ -114,17 +111,17 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
 {
     NSAssert(_totalImages > 1, @"There should be more than 1 image to swap");
     
-    UIImageView *imageViewToHide = [self.imageViews objectAtIndex:_currentlyDisplayingImageViewIndex];
+    UIImageView *imageViewToHide = [_imageViews objectAtIndex:_currentlyDisplayingImageViewIndex];
     
     _currentlyDisplayingImageViewIndex = _currentlyDisplayingImageViewIndex == 0 ? 1 : 0;
     
-    UIImageView *imageViewToShow = [self.imageViews objectAtIndex:_currentlyDisplayingImageViewIndex];
+    UIImageView *imageViewToShow = [_imageViews objectAtIndex:_currentlyDisplayingImageViewIndex];
 
     NSUInteger nextImageToShowIndex = _currentlyDisplayingImageIndex;
     
     do
     {
-        nextImageToShowIndex = [[self class] randomIntBetweenNumber:0 andNumber:_totalImages - 1];
+        nextImageToShowIndex = [[self class] randomNumberBetweenNumber:0 andNumber:_totalImages - 1];
     }
     while (nextImageToShowIndex == _currentlyDisplayingImageIndex);
     
@@ -140,12 +137,12 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
                         options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn
                      animations:^
      {
-         NSInteger randomTranslationValueX = [[self class] randomIntBetweenNumber:0 andNumber:kJSAnimatedImagesViewImageViewsBorderOffset] - kJSAnimatedImagesViewImageViewsBorderOffset;
-         NSInteger randomTranslationValueY = [[self class] randomIntBetweenNumber:0 andNumber:kJSAnimatedImagesViewImageViewsBorderOffset] - kJSAnimatedImagesViewImageViewsBorderOffset;
+         NSInteger randomTranslationValueX = [[self class] randomNumberBetweenNumber:0 andNumber:JSAnimatedImagesViewImageViewsBorderOffset] - JSAnimatedImagesViewImageViewsBorderOffset;
+         NSInteger randomTranslationValueY = [[self class] randomNumberBetweenNumber:0 andNumber:JSAnimatedImagesViewImageViewsBorderOffset] - JSAnimatedImagesViewImageViewsBorderOffset;
          
          CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(randomTranslationValueX, randomTranslationValueY);
          
-         CGFloat randomScaleTransformValue = [[self class] randomIntBetweenNumber:115 andNumber:120]/100;
+         CGFloat randomScaleTransformValue = [[self class] randomNumberBetweenNumber:115 andNumber:120] / 100.0f;
          
          CGAffineTransform scaleTransform = CGAffineTransformMakeScale(randomScaleTransformValue, randomScaleTransformValue);
          
@@ -156,8 +153,7 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     /* Fade animation */
     [UIView animateWithDuration:self.transitionDuration
                           delay:kMovementAndTransitionTimeOffset
-                        options:UIViewAnimationOptionBeginFromCurrentState
-     | UIViewAnimationCurveEaseIn
+                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn
                      animations:^
      {
          imageViewToShow.alpha = 1.0;
@@ -175,30 +171,31 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
 - (void)reloadData
 {
     _totalImages = [self.dataSource animatedImagesNumberOfImages:self];
-    
-    [self.imageSwappingTimer fire];
+
+    // Using the ivar directly. If there's no timer, it's because the animations are stopped.
+    [_imageSwappingTimer fire];
 }
 
 - (void)stopAnimating
 {
     if (_animating)
     {
-        _imageSwappingTimer = nil;
-        
+        self.imageSwappingTimer = nil;
+
         // Fade all image views out
         [UIView animateWithDuration:self.transitionDuration
                               delay:0.0
                             options:UIViewAnimationOptionBeginFromCurrentState
                          animations:^
          {
-             for (UIImageView *imageView in self.imageViews)
+             for (UIImageView *imageView in _imageViews)
              {
                  imageView.alpha = 0.0;
              }
          }
                          completion:^(BOOL finished)
          {
-             _currentlyDisplayingImageIndex = kJSAnimatedImagesViewNoImageDisplayingIndex;
+             _currentlyDisplayingImageIndex = JSAnimatedImagesViewNoImageDisplayingIndex;
              _animating = NO;
          }];
     }
@@ -217,28 +214,19 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
 
 #pragma mark - Getters
 
-- (NSTimer *)imageSwappingTimer
+- (MSWeakTimer *)imageSwappingTimer
 {
     if (!_imageSwappingTimer)
     {
-        _imageSwappingTimer = [NSTimer scheduledTimerWithTimeInterval:self.timePerImage
-                                                               target:self
-                                                             selector:@selector(bringNextImage)
-                                                             userInfo:nil
-                                                              repeats:YES];
+        _imageSwappingTimer = [MSWeakTimer scheduledTimerWithTimeInterval:self.timePerImage
+                                                                   target:self
+                                                                 selector:@selector(bringNextImage)
+                                                                 userInfo:nil
+                                                                  repeats:YES
+                                                            dispatchQueue:dispatch_get_main_queue()];
     }
     
     return _imageSwappingTimer;
-}
-
-- (void)setImageSwappingTimer:(NSTimer *)imageSwappingTimer
-{
-    if (imageSwappingTimer != _imageSwappingTimer)
-    {
-        [_imageSwappingTimer invalidate];
-
-        _imageSwappingTimer = imageSwappingTimer;
-    }
 }
 
 #pragma mark - View Life Cycle
@@ -259,15 +247,16 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
 
 #pragma mark - Random Numbers
 
-+ (NSUInteger)randomIntBetweenNumber:(NSUInteger)minNumber andNumber:(NSUInteger)maxNumber
++ (NSUInteger)randomNumberBetweenNumber:(NSUInteger)minNumber andNumber:(NSUInteger)maxNumber
 {
-    if (minNumber > maxNumber) {
-        return [self randomIntBetweenNumber:maxNumber andNumber:minNumber];
+    if (minNumber > maxNumber)
+    {
+        return [self randomNumberBetweenNumber:maxNumber andNumber:minNumber];
     }
     
-    NSUInteger i = (arc4random() % (maxNumber - minNumber + 1)) + minNumber;
+    NSUInteger randomInt = (arc4random_uniform(maxNumber - minNumber + 1)) + minNumber;
     
-    return i;
+    return randomInt;
 }
 
 @end
