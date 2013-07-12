@@ -22,8 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
-#define kJSAnimatedImagesViewDefaultTimePerImage 5.0f
-#define kJSAnimatedImagesViewDefaultImageSwappingAnimationDuration 1.0f
+static const CGFloat JSAnimatedImagesViewDefaultTimePerImage = 5.0f;
+static const CGFloat JSAnimatedImagesViewDefaultImageSwappingAnimationDuration = 1.0f;
 
 @protocol JSAnimatedImagesViewDataSource;
 

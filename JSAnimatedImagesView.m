@@ -23,12 +23,12 @@
 #import "JSAnimatedImagesView.h"
 
 #if !__has_feature(objc_arc)
-    #error JSAnimatedImagesView requires ARC enabled. Mark the .m file with the `objc_arc` linker flag.
+    #error JSAnimatedImagesView requires ARC enabled. Mark the .m file with the objc_arc linker flag.
 #endif
 
-#define kJSAnimatedImagesViewNoImageDisplayingIndex -1
+static const NSUInteger JSAnimatedImagesViewNoImageDisplayingIndex = -1;
 
-#define kJSAnimatedImagesViewImageViewsBorderOffset 10
+static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
 
 @interface JSAnimatedImagesView()
 {
