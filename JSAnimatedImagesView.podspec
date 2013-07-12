@@ -8,7 +8,8 @@ Pod::Spec.new do |s|
   s.author       = { "Javier Soto" => "ios@javisoto.es" }
   
   s.source       = { :git => "https://github.com/JaviSoto/JSAnimatedImagesView.git", :tag => "1.0.0" }
-  s.platform     = :ios, '6.0'
-  s.source_files = '*.{h,m}'
+  s.platform     = :ios, '5.0'
+  s.source_files = 'JSAnimatedImagesView.{h,m}'
   s.requires_arc = true
+  s.dependency 'MSWeakTimer', '~> 1.0'
 end
