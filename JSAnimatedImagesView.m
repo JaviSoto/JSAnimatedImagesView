@@ -127,7 +127,10 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     
     _currentlyDisplayingImageIndex = nextImageToShowIndex;
 
-    imageViewToShow.image = [self.dataSource animatedImagesView:self imageAtIndex:nextImageToShowIndex];
+    UIImage *imageToShow = [self.dataSource animatedImagesView:self imageAtIndex:nextImageToShowIndex];
+    NSAssert(imageToShow != nil, @"Must return an image");
+
+    imageViewToShow.image = imageToShow;
     
     static const CGFloat kMovementAndTransitionTimeOffset = 0.1;
     
