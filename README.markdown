@@ -91,3 +91,7 @@ Specifies the duration of the transition (fade-out/fade-in) animation.
 
 ## License
 `JSAnimatedImagesView` is available under the MIT license. See the LICENSE file for more info.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/JaviSoto/jsanimatedimagesview/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
