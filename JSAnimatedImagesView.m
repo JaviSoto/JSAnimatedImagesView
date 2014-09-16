@@ -92,6 +92,7 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     _currentlyDisplayingImageIndex = JSAnimatedImagesViewNoImageDisplayingIndex;
     _timePerImage = JSAnimatedImagesViewDefaultTimePerImage;
     _transitionDuration = JSAnimatedImagesViewDefaultImageSwappingAnimationDuration;
+    _motionAnimationEnabled = JSAnimatedImagesViewDefaultMotionAnimationEnabled;
 }
 
 #pragma mark - Animations
@@ -135,23 +136,25 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     static const CGFloat kMovementAndTransitionTimeOffset = 0.1;
     
     /* Move image animation */
-    [UIView animateWithDuration:self.timePerImage + self.transitionDuration + kMovementAndTransitionTimeOffset
-                          delay:0.0
-                        options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn
-                     animations:^
-     {
-         NSInteger randomTranslationValueX = [[self class] randomNumberBetweenNumber:0 andNumber:JSAnimatedImagesViewImageViewsBorderOffset] - JSAnimatedImagesViewImageViewsBorderOffset;
-         NSInteger randomTranslationValueY = [[self class] randomNumberBetweenNumber:0 andNumber:JSAnimatedImagesViewImageViewsBorderOffset] - JSAnimatedImagesViewImageViewsBorderOffset;
-         
-         CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(randomTranslationValueX, randomTranslationValueY);
-         
-         CGFloat randomScaleTransformValue = [[self class] randomNumberBetweenNumber:115 andNumber:120] / 100.0f;
-         
-         CGAffineTransform scaleTransform = CGAffineTransformMakeScale(randomScaleTransformValue, randomScaleTransformValue);
-         
-         imageViewToShow.transform = CGAffineTransformConcat(scaleTransform, translationTransform);
-     }
-                     completion:NULL];
+    if (self.motionAnimationEnabled) {
+        [UIView animateWithDuration:self.timePerImage + self.transitionDuration + kMovementAndTransitionTimeOffset
+                              delay:0.0
+                            options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn
+                         animations:^
+         {
+             NSInteger randomTranslationValueX = [[self class] randomNumberBetweenNumber:0 andNumber:JSAnimatedImagesViewImageViewsBorderOffset] - JSAnimatedImagesViewImageViewsBorderOffset;
+             NSInteger randomTranslationValueY = [[self class] randomNumberBetweenNumber:0 andNumber:JSAnimatedImagesViewImageViewsBorderOffset] - JSAnimatedImagesViewImageViewsBorderOffset;
+             
+             CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(randomTranslationValueX, randomTranslationValueY);
+             
+             CGFloat randomScaleTransformValue = [[self class] randomNumberBetweenNumber:115 andNumber:120] / 100.0f;
+             
+             CGAffineTransform scaleTransform = CGAffineTransformMakeScale(randomScaleTransformValue, randomScaleTransformValue);
+             
+             imageViewToShow.transform = CGAffineTransformConcat(scaleTransform, translationTransform);
+         }
+                         completion:NULL];
+    }
     
     /* Fade animation */
     [UIView animateWithDuration:self.transitionDuration

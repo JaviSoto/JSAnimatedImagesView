@@ -24,6 +24,7 @@
 
 static const CGFloat JSAnimatedImagesViewDefaultTimePerImage = 5.0f;
 static const CGFloat JSAnimatedImagesViewDefaultImageSwappingAnimationDuration = 1.0f;
+static const BOOL JSAnimatedImagesViewDefaultMotionAnimationEnabled = YES;
 
 @protocol JSAnimatedImagesViewDataSource;
 
@@ -42,6 +43,13 @@ static const CGFloat JSAnimatedImagesViewDefaultImageSwappingAnimationDuration =
  @note The default value is `JSAnimatedImagesViewDefaultImageSwappingAnimationDuration`
  */
 @property (nonatomic, assign) NSTimeInterval transitionDuration;
+
+/**
+ Indicates weather the image should be zoomed and moved during display time.
+ Setting this property affects only upcoming images if the animation has already been started.
+ @note The default value is `JSAnimatedImagesViewDefaultMotionAnimationEnabled`
+ */
+@property (nonatomic, assign) BOOL motionAnimationEnabled;
 
 /**
  The view starts animating automatically when it becomes visible, but you can use this method to start the animations again if you stop them using the `stopAnimating`.
