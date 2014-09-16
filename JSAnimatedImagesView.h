@@ -46,6 +46,7 @@ static const BOOL JSAnimatedImagesViewDefaultMotionAnimationEnabled = YES;
 
 /**
  Indicates weather the image should be zoomed and moved during display time.
+ Setting this property affects only upcoming images if the animation has already been started.
  @note The default value is `JSAnimatedImagesViewDefaultMotionAnimationEnabled`
  */
 @property (nonatomic, assign) BOOL motionAnimationEnabled;

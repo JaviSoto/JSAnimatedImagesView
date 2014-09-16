@@ -136,7 +136,7 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
     static const CGFloat kMovementAndTransitionTimeOffset = 0.1;
     
     /* Move image animation */
-    if(self.motionAnimationEnabled) {
+    if (self.motionAnimationEnabled) {
         [UIView animateWithDuration:self.timePerImage + self.transitionDuration + kMovementAndTransitionTimeOffset
                               delay:0.0
                             options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseIn
