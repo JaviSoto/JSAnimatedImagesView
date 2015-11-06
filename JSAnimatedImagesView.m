@@ -79,7 +79,7 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectInset(self.bounds, -JSAnimatedImagesViewImageViewsBorderOffset, -JSAnimatedImagesViewImageViewsBorderOffset)];
 
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.clipsToBounds = YES;
 
         [self addSubview:imageView];
@@ -260,7 +260,7 @@ static const CGFloat JSAnimatedImagesViewImageViewsBorderOffset = 10;
         return [self randomNumberBetweenNumber:maxNumber andNumber:minNumber];
     }
     
-    NSUInteger randomInt = (arc4random_uniform(maxNumber - minNumber + 1)) + minNumber;
+    NSUInteger randomInt = (arc4random_uniform((u_int32_t)(maxNumber - minNumber + 1))) + minNumber;
     
     return randomInt;
 }
