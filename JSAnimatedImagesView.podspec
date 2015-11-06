@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
   
   s.source       = { :git => "https://github.com/JaviSoto/JSAnimatedImagesView.git", :tag => "1.0.0" }
   s.platform     = :ios, '5.0'
+  s.platform     = :tvos, '9.0'
   s.source_files = 'JSAnimatedImagesView.{h,m}'
   s.requires_arc = true
   s.dependency 'MSWeakTimer', '~> 1.0'
